@@ -1,4 +1,4 @@
-# proxy_merge_for_clash_mi
+# clash-provider-simple
 
 A small rule-provider aggregation repository for Clash Mi on iOS.
 
@@ -13,10 +13,42 @@ This repository keeps Clash Mi stable by moving rule-provider updates out of the
 ## Raw URLs
 
 ```text
-https://raw.githubusercontent.com/ranjugao/proxy_merge_for_clash_mi/main/merged_proxy.txt
-https://raw.githubusercontent.com/ranjugao/proxy_merge_for_clash_mi/main/merged_direct.txt
-https://raw.githubusercontent.com/ranjugao/proxy_merge_for_clash_mi/main/merged_reject.txt
+https://raw.githubusercontent.com/ranjugao/clash-provider-simple/main/merged_proxy.txt
+https://raw.githubusercontent.com/ranjugao/clash-provider-simple/main/merged_direct.txt
+https://raw.githubusercontent.com/ranjugao/clash-provider-simple/main/merged_reject.txt
 ```
+
+## Usage
+
+Replace many upstream rule providers in Clash Mi with these three merged providers:
+
+```yaml
+rule-providers:
+  proxy:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/ranjugao/clash-provider-simple/main/merged_proxy.txt
+    interval: 21600
+
+  direct:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/ranjugao/clash-provider-simple/main/merged_direct.txt
+    interval: 21600
+
+  reject:
+    type: http
+    behavior: domain
+    url: https://raw.githubusercontent.com/ranjugao/clash-provider-simple/main/merged_reject.txt
+    interval: 21600
+
+rules:
+  - RULE-SET,reject,REJECT
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,proxy,PROXY
+```
+
+If your proxy policy group is not named `PROXY`, replace `PROXY` with the actual policy group name in your Clash Mi profile.
 
 ## Update Schedule
 
@@ -29,31 +61,3 @@ The update workflow:
 3. Removes empty lines.
 4. Deduplicates entries with `sort -u`.
 5. Commits and pushes only when the merged files changed.
-
-## Clash Rule Provider Example
-
-```yaml
-rule-providers:
-  proxy:
-    type: http
-    behavior: domain
-    url: https://raw.githubusercontent.com/ranjugao/proxy_merge_for_clash_mi/main/merged_proxy.txt
-    path: ./ruleset/merged_proxy.txt
-    interval: 21600
-
-  direct:
-    type: http
-    behavior: classical
-    url: https://raw.githubusercontent.com/ranjugao/proxy_merge_for_clash_mi/main/merged_direct.txt
-    path: ./ruleset/merged_direct.txt
-    interval: 21600
-
-  reject:
-    type: http
-    behavior: classical
-    url: https://raw.githubusercontent.com/ranjugao/proxy_merge_for_clash_mi/main/merged_reject.txt
-    path: ./ruleset/merged_reject.txt
-    interval: 21600
-```
-
-> Note: Pick `behavior` values according to the rule syntax expected by your Clash Mi configuration.
