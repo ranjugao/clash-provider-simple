@@ -1,0 +1,37 @@
+name: Update merged Clash rules
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Merge rule providers
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Merge upstream rule providers
+        run: |
+          chmod +x ./merge.sh
+          ./merge.sh
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- merged_proxy.txt merged_direct.txt merged_reject.txt; then
+            echo "No rule changes detected. Skipping commit."
+            exit 0
+          fi
+
+          git add merged_proxy.txt merged_direct.txt merged_reject.txt
+          git commit -m "Update merged Clash rules"
+          git push
