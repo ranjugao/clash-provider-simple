@@ -7107,6 +7107,7 @@
   - '+.disqusservice.com'
   - '+.dit-inc.us'
   - '+.divas.com.uy'
+  - '+.divdyn.com'
   - '+.diwodiwo.xyz'
   - '+.diy'
   - '+.diyarbakirescort.com'
